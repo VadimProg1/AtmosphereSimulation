@@ -81,13 +81,12 @@ namespace FlightSimulation
             if(y <= 0)
             {
                 timer1.Stop();
-                chart1.Series[0].Points.AddXY(x, 0);
             }
             else
             {
-                seconds += 0.1;
-                chart1.Series[0].Points.AddXY(x, y);
+                seconds += 0.1;            
             }
+            chart1.Series[0].Points.AddXY(x, y);
             UpdateTime();
 
         }
