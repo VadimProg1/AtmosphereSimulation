@@ -12,7 +12,7 @@ namespace FlightSimulation
 {
     public partial class Form1 : Form
     {
-        decimal t, x0, y0, v0, cosA, sinA;
+        decimal t, x0, y0, v0, cosA, sinA, xMax = 0, yMax = 0;
         const decimal dt = 0.1M, g = 9.81M;
         bool isPaused = false;
         double seconds = 0;
@@ -53,9 +53,37 @@ namespace FlightSimulation
                 cosA = (decimal)Math.Cos(a);
                 sinA = (decimal)Math.Sin(a);
                 chart1.Series[0].Points.AddXY(x0, y0);
+                FindMaxXAndY();
+                SetupChart();
                 timer1.Start();
             }
             
+        }
+
+        private void SetupChart()
+        {
+            chart1.ChartAreas[0].AxisX.Minimum = 0;
+            chart1.ChartAreas[0].AxisX.Maximum = (double)xMax;
+            chart1.ChartAreas[0].AxisY.Minimum = 0;
+            chart1.ChartAreas[0].AxisY.Maximum = (double)yMax;
+        }
+        private void FindMaxXAndY()
+        {
+            t += dt;
+            decimal x = x0 + v0 * cosA * t;
+            decimal y = y0 + v0 * sinA * t - g * t * t / 2;
+            while (y > 0)
+            {
+                t += dt;
+                x = x0 + v0 * cosA * t;
+                y = y0 + v0 * sinA * t - g * t * t / 2;
+                if(y > yMax)
+                {
+                    yMax = y;
+                }
+            }
+            xMax = x;
+            t = 0;
         }
 
         private void UpdateTime()
